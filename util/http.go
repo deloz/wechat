@@ -2,7 +2,9 @@ package util
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
+	"encoding/pem"
 	"encoding/xml"
 	"fmt"
 	"io"
@@ -11,6 +13,8 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+
+	"golang.org/x/crypto/pkcs12"
 )
 
 // proxyURL 代理URL
@@ -191,20 +195,98 @@ func PostXML(uri string, obj interface{}) ([]byte, error) {
 	return ioutil.ReadAll(response.Body)
 }
 
+// GetHTTPSClient CA证书
+func GetHTTPSClient(rootCa, key string) (*http.Client, error) {
+	certData, err := ioutil.ReadFile(rootCa)
+	if err != nil {
+		return nil, fmt.Errorf("unable to find cert path=%s, error=%v", rootCa, err)
+	}
+
+	cert, err := pkcs12ToPem(certData, key)
+	if err != nil {
+		return nil, err
+	}
+
+	config := &tls.Config{
+		Certificates: []tls.Certificate{cert},
+	}
+
+	tr := transport()
+	tr.TLSClientConfig = config
+	tr.DisableCompression = true
+
+	client := &http.Client{
+		Transport: tr,
+	}
+
+	return client, nil
+}
+
+// pkcs12ToPem 将Pkcs12转成Pem
+func pkcs12ToPem(p12 []byte, password string) (tls.Certificate, error) {
+	fail := func(err error) (tls.Certificate, error) {
+		return tls.Certificate{}, err
+	}
+
+	blocks, err := pkcs12.ToPEM(p12, password)
+	if err != nil {
+		return fail(err)
+	}
+
+	var pemData []byte
+	for _, b := range blocks {
+		pemData = append(pemData, pem.EncodeToMemory(b)...)
+	}
+
+	cert, err := tls.X509KeyPair(pemData, pemData)
+
+	return cert, err
+}
+
+// PostXMLWithTLS perform a HTTP/POST request with XML body and TLS
+func PostXMLWithTLS(uri string, obj interface{}, ca, key string) ([]byte, error) {
+	xmlData, err := xml.Marshal(obj)
+	if err != nil {
+		return nil, err
+	}
+
+	body := bytes.NewBuffer(xmlData)
+	client, err := GetHTTPSClient(ca, key)
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := client.Post(uri, "application/xml;charset=utf-8", body)
+	if err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("http code error : uri=%v , statusCode=%v", uri, response.StatusCode)
+	}
+	return ioutil.ReadAll(response.Body)
+}
+
 // GetHTTPClient 获取 HTTPClient,如果有设置代理，则根据代理的地址生成代理的httpClient
 func GetHTTPClient() (httpClient *http.Client) {
+	httpClient = &http.Client{
+		Transport: transport(),
+	}
+
+	return httpClient
+}
+
+func transport() *http.Transport {
+	tr := &http.Transport{}
+
 	if proxy {
-		proxy := func(_ *http.Request) (*url.URL, error) {
+		p := func(_ *http.Request) (*url.URL, error) {
 			return url.Parse(proxyURL)
 		}
-		httpTransport := &http.Transport{
-			Proxy: proxy,
-		}
-		httpClient = &http.Client{
-			Transport: httpTransport,
-		}
-	} else {
-		httpClient = &http.Client{}
+
+		tr.Proxy = p
 	}
-	return httpClient
+
+	return tr
 }
