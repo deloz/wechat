@@ -9,12 +9,35 @@ import (
 	"io/ioutil"
 	"mime/multipart"
 	"net/http"
+	"net/url"
 	"os"
 )
 
+// proxyURL 代理URL
+var proxyURL string
+
+// proxy 是否开启代理
+var proxy bool
+
+// SetProxy 设置代理URL
+func SetProxy(url string) {
+	proxyURL = url
+	proxy = len(url) > 0
+}
+
+// OpenProxy 打开代理
+func OpenProxy() {
+	proxy = true
+}
+
+// CloseProxy 关闭代理
+func CloseProxy() {
+	proxy = false
+}
+
 // HTTPGet get 请求
 func HTTPGet(uri string) ([]byte, error) {
-	response, err := http.Get(uri)
+	response, err := GetHTTPClient().Get(uri)
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +61,7 @@ func PostJSON(uri string, obj interface{}) ([]byte, error) {
 	jsonData = bytes.Replace(jsonData, []byte("\\u0026"), []byte("&"), -1)
 
 	body := bytes.NewBuffer(jsonData)
-	response, err := http.Post(uri, "application/json;charset=utf-8", body)
+	response, err := GetHTTPClient().Post(uri, "application/json;charset=utf-8", body)
 	if err != nil {
 		return nil, err
 	}
@@ -109,7 +132,7 @@ func PostMultipartForm(fields []MultipartFormField, uri string) (respBody []byte
 	contentType := bodyWriter.FormDataContentType()
 	bodyWriter.Close()
 
-	resp, e := http.Post(uri, contentType, bodyBuf)
+	resp, e := GetHTTPClient().Post(uri, contentType, bodyBuf)
 	if e != nil {
 		err = e
 		return
@@ -130,7 +153,7 @@ func PostXML(uri string, obj interface{}) ([]byte, error) {
 	}
 
 	body := bytes.NewBuffer(xmlData)
-	response, err := http.Post(uri, "application/xml;charset=utf-8", body)
+	response, err := GetHTTPClient().Post(uri, "application/xml;charset=utf-8", body)
 	if err != nil {
 		return nil, err
 	}
@@ -140,4 +163,22 @@ func PostXML(uri string, obj interface{}) ([]byte, error) {
 		return nil, fmt.Errorf("http code error : uri=%v , statusCode=%v", uri, response.StatusCode)
 	}
 	return ioutil.ReadAll(response.Body)
+}
+
+// GetHTTPClient 获取 HTTPClient,如果有设置代理，则根据代理的地址生成代理的httpClient
+func GetHTTPClient() (httpClient *http.Client) {
+	if proxy {
+		proxy := func(_ *http.Request) (*url.URL, error) {
+			return url.Parse(proxyURL)
+		}
+		httpTransport := &http.Transport{
+			Proxy: proxy,
+		}
+		httpClient = &http.Client{
+			Transport: httpTransport,
+		}
+	} else {
+		httpClient = &http.Client{}
+	}
+	return httpClient
 }
