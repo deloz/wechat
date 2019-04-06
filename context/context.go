@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/funxdata/wechat/cache"
+	"github.com/deloz/wechat/cache"
 )
 
 // Context struct
@@ -22,10 +22,10 @@ type Context struct {
 	Writer  http.ResponseWriter
 	Request *http.Request
 
-	//accessTokenLock 读写锁 同一个AppID一个
+	// accessTokenLock 读写锁 同一个AppID一个
 	accessTokenLock *sync.RWMutex
 
-	//jsAPITicket 读写锁 同一个AppID一个
+	// jsAPITicket 读写锁 同一个AppID一个
 	jsAPITicketLock *sync.RWMutex
 }
 

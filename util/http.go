@@ -12,7 +12,7 @@ import (
 	"os"
 )
 
-//HTTPGet get 请求
+// HTTPGet get 请求
 func HTTPGet(uri string) ([]byte, error) {
 	response, err := http.Get(uri)
 	if err != nil {
@@ -26,7 +26,7 @@ func HTTPGet(uri string) ([]byte, error) {
 	return ioutil.ReadAll(response.Body)
 }
 
-//PostJSON post json 数据请求
+// PostJSON post json 数据请求
 func PostJSON(uri string, obj interface{}) ([]byte, error) {
 	jsonData, err := json.Marshal(obj)
 	if err != nil {
@@ -50,7 +50,7 @@ func PostJSON(uri string, obj interface{}) ([]byte, error) {
 	return ioutil.ReadAll(response.Body)
 }
 
-//PostFile 上传文件
+// PostFile 上传文件
 func PostFile(fieldname, filename, uri string) ([]byte, error) {
 	fields := []MultipartFormField{
 		{
@@ -62,7 +62,7 @@ func PostFile(fieldname, filename, uri string) ([]byte, error) {
 	return PostMultipartForm(fields, uri)
 }
 
-//MultipartFormField 保存文件或其他字段信息
+// MultipartFormField 保存文件或其他字段信息
 type MultipartFormField struct {
 	IsFile    bool
 	Fieldname string
@@ -70,7 +70,7 @@ type MultipartFormField struct {
 	Filename  string
 }
 
-//PostMultipartForm 上传文件或其他多个字段
+// PostMultipartForm 上传文件或其他多个字段
 func PostMultipartForm(fields []MultipartFormField, uri string) (respBody []byte, err error) {
 	bodyBuf := &bytes.Buffer{}
 	bodyWriter := multipart.NewWriter(bodyBuf)
@@ -122,7 +122,7 @@ func PostMultipartForm(fields []MultipartFormField, uri string) (respBody []byte
 	return
 }
 
-//PostXML perform a HTTP/POST request with XML body
+// PostXML perform a HTTP/POST request with XML body
 func PostXML(uri string, obj interface{}) ([]byte, error) {
 	xmlData, err := xml.Marshal(obj)
 	if err != nil {

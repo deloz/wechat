@@ -1,6 +1,6 @@
 package menu
 
-//Button 菜单按钮
+// Button 菜单按钮
 type Button struct {
 	Type       string    `json:"type,omitempty"`
 	Name       string    `json:"name,omitempty"`
@@ -12,7 +12,7 @@ type Button struct {
 	SubButtons []*Button `json:"sub_button,omitempty"`
 }
 
-//SetSubButton 设置二级菜单
+// SetSubButton 设置二级菜单
 func (btn *Button) SetSubButton(name string, subButtons []*Button) {
 	btn.Name = name
 	btn.SubButtons = subButtons
@@ -22,7 +22,7 @@ func (btn *Button) SetSubButton(name string, subButtons []*Button) {
 	btn.MediaID = ""
 }
 
-//SetClickButton btn 为click类型
+// SetClickButton btn 为click类型
 func (btn *Button) SetClickButton(name, key string) {
 	btn.Type = "click"
 	btn.Name = name
@@ -32,7 +32,7 @@ func (btn *Button) SetClickButton(name, key string) {
 	btn.SubButtons = nil
 }
 
-//SetViewButton view类型
+// SetViewButton view类型
 func (btn *Button) SetViewButton(name, url string) {
 	btn.Type = "view"
 	btn.Name = name
@@ -52,7 +52,7 @@ func (btn *Button) SetScanCodePushButton(name, key string) {
 	btn.SubButtons = nil
 }
 
-//SetScanCodeWaitMsgButton 设置 扫码推事件且弹出"消息接收中"提示框
+// SetScanCodeWaitMsgButton 设置 扫码推事件且弹出"消息接收中"提示框
 func (btn *Button) SetScanCodeWaitMsgButton(name, key string) {
 	btn.Type = "scancode_waitmsg"
 	btn.Name = name
@@ -63,7 +63,7 @@ func (btn *Button) SetScanCodeWaitMsgButton(name, key string) {
 	btn.SubButtons = nil
 }
 
-//SetPicSysPhotoButton 设置弹出系统拍照发图按钮
+// SetPicSysPhotoButton 设置弹出系统拍照发图按钮
 func (btn *Button) SetPicSysPhotoButton(name, key string) {
 	btn.Type = "pic_sysphoto"
 	btn.Name = name
@@ -74,7 +74,7 @@ func (btn *Button) SetPicSysPhotoButton(name, key string) {
 	btn.SubButtons = nil
 }
 
-//SetPicPhotoOrAlbumButton 设置弹出拍照或者相册发图类型按钮
+// SetPicPhotoOrAlbumButton 设置弹出拍照或者相册发图类型按钮
 func (btn *Button) SetPicPhotoOrAlbumButton(name, key string) {
 	btn.Type = "pic_photo_or_album"
 	btn.Name = name
@@ -107,7 +107,7 @@ func (btn *Button) SetLocationSelectButton(name, key string) {
 	btn.SubButtons = nil
 }
 
-//SetMediaIDButton  设置 下发消息(除文本消息) 类型按钮
+// SetMediaIDButton  设置 下发消息(除文本消息) 类型按钮
 func (btn *Button) SetMediaIDButton(name, mediaID string) {
 	btn.Type = "media_id"
 	btn.Name = name
@@ -118,7 +118,7 @@ func (btn *Button) SetMediaIDButton(name, mediaID string) {
 	btn.SubButtons = nil
 }
 
-//SetViewLimitedButton  设置 跳转图文消息URL 类型按钮
+// SetViewLimitedButton  设置 跳转图文消息URL 类型按钮
 func (btn *Button) SetViewLimitedButton(name, mediaID string) {
 	btn.Type = "view_limited"
 	btn.Name = name
@@ -129,7 +129,7 @@ func (btn *Button) SetViewLimitedButton(name, mediaID string) {
 	btn.SubButtons = nil
 }
 
-//SetMiniprogramButton  设置 跳转小程序 类型按钮 (公众号后台必须已经关联小程序)
+// SetMiniprogramButton  设置 跳转小程序 类型按钮 (公众号后台必须已经关联小程序)
 func (btn *Button) SetMiniprogramButton(name, url, appID, pagePath string) {
 	btn.Type = "miniprogram"
 	btn.Name = name

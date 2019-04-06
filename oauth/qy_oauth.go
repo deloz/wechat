@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/funxdata/wechat/util"
+	"github.com/deloz/wechat/util"
 )
 
 var (
@@ -14,14 +14,14 @@ var (
 	qyUserDetailURL    = "https://qyapi.weixin.qq.com/cgi-bin/user/getuserdetail"
 )
 
-//GetQyRedirectURL 获取企业微信跳转的url地址
+// GetQyRedirectURL 获取企业微信跳转的url地址
 func (oauth *Oauth) GetQyRedirectURL(redirectURI, agentid, scope, state string) (string, error) {
-	//url encode
+	// url encode
 	urlStr := url.QueryEscape(redirectURI)
 	return fmt.Sprintf(qyRedirectOauthURL, oauth.AppID, urlStr, scope, agentid, state), nil
 }
 
-//QyUserInfo 用户授权获取到用户信息
+// QyUserInfo 用户授权获取到用户信息
 type QyUserInfo struct {
 	util.CommonError
 
@@ -31,7 +31,7 @@ type QyUserInfo struct {
 	ExpiresIn  int64  `json:"expires_in"`
 }
 
-//GetQyUserInfoByCode 根据code获取企业user_info
+// GetQyUserInfoByCode 根据code获取企业user_info
 func (oauth *Oauth) GetQyUserInfoByCode(code string) (result QyUserInfo, err error) {
 	qyAccessToken, e := oauth.GetQyAccessToken()
 	if e != nil {
@@ -55,7 +55,7 @@ func (oauth *Oauth) GetQyUserInfoByCode(code string) (result QyUserInfo, err err
 	return
 }
 
-//QyUserDetail 到用户详情
+// QyUserDetail 到用户详情
 type QyUserDetail struct {
 	util.CommonError
 
@@ -68,7 +68,7 @@ type QyUserDetail struct {
 	QrCode string `json:"qr_code"`
 }
 
-//GetQyUserDetailUserTicket 根据user_ticket获取到用户详情
+// GetQyUserDetailUserTicket 根据user_ticket获取到用户详情
 func (oauth *Oauth) GetQyUserDetailUserTicket(userTicket string) (result QyUserDetail, err error) {
 	var qyAccessToken string
 	qyAccessToken, err = oauth.GetQyAccessToken()

@@ -4,27 +4,27 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/funxdata/wechat/context"
-	"github.com/funxdata/wechat/util"
+	"github.com/deloz/wechat/context"
+	"github.com/deloz/wechat/util"
 )
 
 const (
 	templateSendURL = "https://api.weixin.qq.com/cgi-bin/message/template/send"
 )
 
-//Template 模板消息
+// Template 模板消息
 type Template struct {
 	*context.Context
 }
 
-//NewTemplate 实例化
+// NewTemplate 实例化
 func NewTemplate(context *context.Context) *Template {
 	tpl := new(Template)
 	tpl.Context = context
 	return tpl
 }
 
-//Message 发送的模板消息内容
+// Message 发送的模板消息内容
 type Message struct {
 	ToUser     string               `json:"touser"`          // 必须, 接受者OpenID
 	TemplateID string               `json:"template_id"`     // 必须, 模版ID
@@ -33,12 +33,12 @@ type Message struct {
 	Data       map[string]*DataItem `json:"data"`            // 必须, 模板数据
 
 	MiniProgram struct {
-		AppID    string `json:"appid"`    //所需跳转到的小程序appid（该小程序appid必须与发模板消息的公众号是绑定关联关系）
-		PagePath string `json:"pagepath"` //所需跳转到小程序的具体页面路径，支持带参数,（示例index?foo=bar）
-	} `json:"miniprogram"` //可选,跳转至小程序地址
+		AppID    string `json:"appid"`    // 所需跳转到的小程序appid（该小程序appid必须与发模板消息的公众号是绑定关联关系）
+		PagePath string `json:"pagepath"` // 所需跳转到小程序的具体页面路径，支持带参数,（示例index?foo=bar）
+	} `json:"miniprogram"` // 可选,跳转至小程序地址
 }
 
-//DataItem 模版内某个 .DATA 的值
+// DataItem 模版内某个 .DATA 的值
 type DataItem struct {
 	Value string `json:"value"`
 	Color string `json:"color,omitempty"`
@@ -50,7 +50,7 @@ type resTemplateSend struct {
 	MsgID int64 `json:"msgid"`
 }
 
-//Send 发送模板消息
+// Send 发送模板消息
 func (tpl *Template) Send(msg *Message) (msgID int64, err error) {
 	var accessToken string
 	accessToken, err = tpl.GetAccessToken()

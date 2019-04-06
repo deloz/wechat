@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/funxdata/wechat/context"
-	"github.com/funxdata/wechat/util"
+	"github.com/deloz/wechat/context"
+	"github.com/deloz/wechat/util"
 )
 
 const getTicketURL = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=%s&type=jsapi"
@@ -32,15 +32,15 @@ type resTicket struct {
 	ExpiresIn int64  `json:"expires_in"`
 }
 
-//NewJs init
+// NewJs init
 func NewJs(context *context.Context) *Js {
 	js := new(Js)
 	js.Context = context
 	return js
 }
 
-//GetConfig 获取jssdk需要的配置参数
-//uri 为当前网页地址
+// GetConfig 获取jssdk需要的配置参数
+// uri 为当前网页地址
 func (js *Js) GetConfig(uri string) (config *Config, err error) {
 	config = new(Config)
 	var ticketStr string
@@ -61,12 +61,12 @@ func (js *Js) GetConfig(uri string) (config *Config, err error) {
 	return
 }
 
-//GetTicket 获取jsapi_ticket
+// GetTicket 获取jsapi_ticket
 func (js *Js) GetTicket() (ticketStr string, err error) {
 	js.GetJsAPITicketLock().Lock()
 	defer js.GetJsAPITicketLock().Unlock()
 
-	//先从cache中取
+	// 先从cache中取
 	jsAPITicketCacheKey := fmt.Sprintf("jsapi_ticket_%s", js.AppID)
 	val := js.Cache.Get(jsAPITicketCacheKey)
 	if val != nil {
@@ -82,7 +82,7 @@ func (js *Js) GetTicket() (ticketStr string, err error) {
 	return
 }
 
-//getTicketFromServer 强制从服务器中获取ticket
+// getTicketFromServer 强制从服务器中获取ticket
 func (js *Js) getTicketFromServer() (ticket resTicket, err error) {
 	var accessToken string
 	accessToken, err = js.GetAccessToken()

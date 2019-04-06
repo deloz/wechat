@@ -4,8 +4,8 @@ import (
 	"encoding/xml"
 	"errors"
 
-	"github.com/funxdata/wechat/context"
-	"github.com/funxdata/wechat/util"
+	"github.com/deloz/wechat/context"
+	"github.com/deloz/wechat/util"
 )
 
 var payBankURI = "https://api.mch.weixin.qq.com/mmpaysptrans/pay_bank"
@@ -113,7 +113,7 @@ func (pcf *Bank) PreBankOrder(p *OrderData) (payOrder BankResponse, err error) {
 		return
 	}
 	if payOrder.ReturnCode == "SUCCESS" {
-		//pay success
+		// pay success
 		if payOrder.ResultCode == "SUCCESS" {
 			err = nil
 			return

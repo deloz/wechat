@@ -6,8 +6,8 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/funxdata/wechat/context"
-	"github.com/funxdata/wechat/util"
+	"github.com/deloz/wechat/context"
+	"github.com/deloz/wechat/util"
 )
 
 const (
@@ -15,12 +15,12 @@ const (
 	qrImgURL       = "https://mp.weixin.qq.com/cgi-bin/showqrcode"
 )
 
-//QR 模板消息
+// QR 模板消息
 type QR struct {
 	*context.Context
 }
 
-//NewQR 实例化
+// NewQR 实例化
 func NewQR(context *context.Context) *QR {
 	q := new(QR)
 	q.Context = context
@@ -60,7 +60,7 @@ func newStrTmpQrRequest(exp time.Duration, str string) *TmpQR {
 	return tq
 }
 
-//Ticket 获取QR Ticket
+// Ticket 获取QR Ticket
 func (q *QR) GetStrQRTicket(exp time.Duration, str string) (t *Ticket, err error) {
 	tq := newStrTmpQrRequest(exp, str)
 

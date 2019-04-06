@@ -11,7 +11,7 @@ import (
 	"fmt"
 )
 
-//EncryptMsg 加密消息
+// EncryptMsg 加密消息
 func EncryptMsg(random, rawXMLMsg []byte, appID, aesKey string) (encrtptMsg []byte, err error) {
 	defer func() {
 		if e := recover(); e != nil {
@@ -29,8 +29,8 @@ func EncryptMsg(random, rawXMLMsg []byte, appID, aesKey string) (encrtptMsg []by
 	return
 }
 
-//AESEncryptMsg ciphertext = AES_Encrypt[random(16B) + msg_len(4B) + rawXMLMsg + appId]
-//参考：github.com/chanxuehong/wechat.v2
+// AESEncryptMsg ciphertext = AES_Encrypt[random(16B) + msg_len(4B) + rawXMLMsg + appId]
+// 参考：github.com/chanxuehong/wechat.v2
 func AESEncryptMsg(random, rawXMLMsg []byte, appID string, aesKey []byte) (ciphertext []byte) {
 	const (
 		BlockSize = 32            // PKCS#7
@@ -67,7 +67,7 @@ func AESEncryptMsg(random, rawXMLMsg []byte, appID string, aesKey []byte) (ciphe
 	return
 }
 
-//DecryptMsg 消息解密
+// DecryptMsg 消息解密
 func DecryptMsg(appID, encryptedMsg, aesKey string) (random, rawMsgXMLBytes []byte, err error) {
 	defer func() {
 		if e := recover(); e != nil {
@@ -113,7 +113,7 @@ func aesKeyDecode(encodedAESKey string) (key []byte, err error) {
 }
 
 // AESDecryptMsg ciphertext = AES_Encrypt[random(16B) + msg_len(4B) + rawXMLMsg + appId]
-//参考：github.com/chanxuehong/wechat.v2
+// 参考：github.com/chanxuehong/wechat.v2
 func AESDecryptMsg(ciphertext []byte, aesKey []byte) (random, rawXMLMsg, appID []byte, err error) {
 	const (
 		BlockSize = 32            // PKCS#7

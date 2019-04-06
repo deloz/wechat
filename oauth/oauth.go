@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/funxdata/wechat/context"
-	"github.com/funxdata/wechat/util"
+	"github.com/deloz/wechat/context"
+	"github.com/deloz/wechat/util"
 )
 
 const (
@@ -19,26 +19,26 @@ const (
 	jscode2SessionURL     = "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code"
 )
 
-//Oauth 保存用户授权信息
+// Oauth 保存用户授权信息
 type Oauth struct {
 	*context.Context
 }
 
-//NewOauth 实例化授权信息
+// NewOauth 实例化授权信息
 func NewOauth(context *context.Context) *Oauth {
 	auth := new(Oauth)
 	auth.Context = context
 	return auth
 }
 
-//GetRedirectURL 获取跳转的url地址
+// GetRedirectURL 获取跳转的url地址
 func (oauth *Oauth) GetRedirectURL(redirectURI, scope, state string) (string, error) {
-	//url encode
+	// url encode
 	urlStr := url.QueryEscape(redirectURI)
 	return fmt.Sprintf(redirectOauthURL, oauth.AppID, urlStr, scope, state), nil
 }
 
-//Redirect 跳转到网页授权
+// Redirect 跳转到网页授权
 func (oauth *Oauth) Redirect(writer http.ResponseWriter, req *http.Request, redirectURI, scope, state string) error {
 	location, err := oauth.GetRedirectURL(redirectURI, scope, state)
 	if err != nil {
@@ -99,7 +99,7 @@ func (oauth *Oauth) GetSessionKey(code string) (result ResAccessToken, err error
 	return
 }
 
-//RefreshAccessToken 刷新access_token
+// RefreshAccessToken 刷新access_token
 func (oauth *Oauth) RefreshAccessToken(refreshToken string) (result ResAccessToken, err error) {
 	urlStr := fmt.Sprintf(refreshAccessTokenURL, oauth.AppID, refreshToken)
 	var response []byte
@@ -118,7 +118,7 @@ func (oauth *Oauth) RefreshAccessToken(refreshToken string) (result ResAccessTok
 	return
 }
 
-//CheckAccessToken 检验access_token是否有效
+// CheckAccessToken 检验access_token是否有效
 func (oauth *Oauth) CheckAccessToken(accessToken, openID string) (b bool, err error) {
 	urlStr := fmt.Sprintf(checkAccessTokenURL, accessToken, openID)
 	var response []byte
@@ -139,7 +139,7 @@ func (oauth *Oauth) CheckAccessToken(accessToken, openID string) (b bool, err er
 	return
 }
 
-//UserInfo 用户授权获取到用户信息
+// UserInfo 用户授权获取到用户信息
 type UserInfo struct {
 	util.CommonError
 
@@ -154,7 +154,7 @@ type UserInfo struct {
 	Unionid    string   `json:"unionid"`
 }
 
-//GetUserInfo 如果scope为 snsapi_userinfo 则可以通过此方法获取到用户基本信息
+// GetUserInfo 如果scope为 snsapi_userinfo 则可以通过此方法获取到用户基本信息
 func (oauth *Oauth) GetUserInfo(accessToken, openID string) (result UserInfo, err error) {
 	urlStr := fmt.Sprintf(userInfoURL, accessToken, openID)
 	var response []byte

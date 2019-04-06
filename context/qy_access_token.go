@@ -7,15 +7,15 @@ import (
 	"sync"
 	"time"
 
-	"github.com/funxdata/wechat/util"
+	"github.com/deloz/wechat/util"
 )
 
 const (
-	//qyAccessTokenURL 获取access_token的接口
+	// qyAccessTokenURL 获取access_token的接口
 	qyAccessTokenURL = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=%s&corpsecret=%s"
 )
 
-//ResQyAccessToken struct
+// ResQyAccessToken struct
 type ResQyAccessToken struct {
 	util.CommonError
 
@@ -23,12 +23,12 @@ type ResQyAccessToken struct {
 	ExpiresIn   int64  `json:"expires_in"`
 }
 
-//SetQyAccessTokenLock 设置读写锁（一个appID一个读写锁）
+// SetQyAccessTokenLock 设置读写锁（一个appID一个读写锁）
 func (ctx *Context) SetQyAccessTokenLock(l *sync.RWMutex) {
 	ctx.accessTokenLock = l
 }
 
-//GetQyAccessToken 获取access_token
+// GetQyAccessToken 获取access_token
 func (ctx *Context) GetQyAccessToken() (accessToken string, err error) {
 	ctx.accessTokenLock.Lock()
 	defer ctx.accessTokenLock.Unlock()
@@ -40,7 +40,7 @@ func (ctx *Context) GetQyAccessToken() (accessToken string, err error) {
 		return
 	}
 
-	//从微信服务器获取
+	// 从微信服务器获取
 	var resQyAccessToken ResQyAccessToken
 	resQyAccessToken, err = ctx.GetQyAccessTokenFromServer()
 	if err != nil {
@@ -51,7 +51,7 @@ func (ctx *Context) GetQyAccessToken() (accessToken string, err error) {
 	return
 }
 
-//GetQyAccessTokenFromServer 强制从微信服务器获取token
+// GetQyAccessTokenFromServer 强制从微信服务器获取token
 func (ctx *Context) GetQyAccessTokenFromServer() (resQyAccessToken ResQyAccessToken, err error) {
 	log.Printf("GetQyAccessTokenFromServer")
 	url := fmt.Sprintf(qyAccessTokenURL, ctx.AppID, ctx.AppSecret)

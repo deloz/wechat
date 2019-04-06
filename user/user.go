@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/funxdata/wechat/context"
-	"github.com/funxdata/wechat/util"
+	"github.com/deloz/wechat/context"
+	"github.com/deloz/wechat/util"
 )
 
 const (
@@ -15,19 +15,19 @@ const (
 	userListURL     = "https://api.weixin.qq.com/cgi-bin/user/get"
 )
 
-//User 用户管理
+// User 用户管理
 type User struct {
 	*context.Context
 }
 
-//NewUser 实例化
+// NewUser 实例化
 func NewUser(context *context.Context) *User {
 	u := new(User)
 	u.Context = context
 	return u
 }
 
-//Info 用户基本信息
+// Info 用户基本信息
 type Info struct {
 	util.CommonError `gorm:"-"`
 
@@ -56,7 +56,7 @@ type OpenidList struct {
 	NextOpenID string `json:"next_openid"`
 }
 
-//GetUserInfo 获取用户基本信息
+// GetUserInfo 获取用户基本信息
 func (user *User) GetUserInfo(openID string) (userInfo *Info, err error) {
 	var accessToken string
 	accessToken, err = user.GetAccessToken()

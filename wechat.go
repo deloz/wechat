@@ -4,17 +4,17 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/funxdata/wechat/cache"
-	"github.com/funxdata/wechat/context"
-	"github.com/funxdata/wechat/js"
-	"github.com/funxdata/wechat/material"
-	"github.com/funxdata/wechat/menu"
-	"github.com/funxdata/wechat/oauth"
-	"github.com/funxdata/wechat/pay"
-	"github.com/funxdata/wechat/qr"
-	"github.com/funxdata/wechat/server"
-	"github.com/funxdata/wechat/template"
-	"github.com/funxdata/wechat/user"
+	"github.com/deloz/wechat/cache"
+	"github.com/deloz/wechat/context"
+	"github.com/deloz/wechat/js"
+	"github.com/deloz/wechat/material"
+	"github.com/deloz/wechat/menu"
+	"github.com/deloz/wechat/oauth"
+	"github.com/deloz/wechat/pay"
+	"github.com/deloz/wechat/qr"
+	"github.com/deloz/wechat/server"
+	"github.com/deloz/wechat/template"
+	"github.com/deloz/wechat/user"
 )
 
 // Wechat struct
@@ -28,9 +28,9 @@ type Config struct {
 	AppSecret      string `yaml:"appSecret"`
 	Token          string `yaml:"token"`
 	EncodingAESKey string `yaml:"encodingAESKey"`
-	PayMchID       string `yaml:"payMchID"`     //支付 - 商户 ID
-	PayNotifyURL   string `yaml:"payNotifyURL"` //支付 - 接受微信支付结果通知的接口地址
-	PayKey         string `yaml:"payKey"`       //支付 - 商户后台设置的支付 key
+	PayMchID       string `yaml:"payMchID"`     // 支付 - 商户 ID
+	PayNotifyURL   string `yaml:"payNotifyURL"` // 支付 - 接受微信支付结果通知的接口地址
+	PayKey         string `yaml:"payKey"`       // 支付 - 商户后台设置的支付 key
 	Cache          cache.Cache
 }
 
@@ -61,7 +61,7 @@ func (wc *Wechat) GetServer(req *http.Request, writer http.ResponseWriter) *serv
 	return server.NewServer(wc.Context)
 }
 
-//GetAccessToken 获取access_token
+// GetAccessToken 获取access_token
 func (wc *Wechat) GetAccessToken() (string, error) {
 	return wc.Context.GetAccessToken()
 }
