@@ -9,6 +9,7 @@ import (
 	"github.com/deloz/wechat/js"
 	"github.com/deloz/wechat/material"
 	"github.com/deloz/wechat/menu"
+	"github.com/deloz/wechat/miniprogram"
 	"github.com/deloz/wechat/oauth"
 	"github.com/deloz/wechat/pay"
 	"github.com/deloz/wechat/qr"
@@ -109,4 +110,9 @@ func (wc *Wechat) GetBankPay() *pay.Bank {
 // GetQR
 func (wc *Wechat) GetQR() *qr.QR {
 	return qr.NewQR(wc.Context)
+}
+
+// GetMiniProgram 获取小程序的实例
+func (wc *Wechat) GetMiniProgram() *miniprogram.MiniProgram {
+	return miniprogram.NewMiniProgram(wc.Context)
 }
