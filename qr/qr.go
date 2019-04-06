@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	qrCreateURL = "https://api.weixin.qq.com/cgi-bin/qrcode/create"
+	qrCreateURL = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=%s"
 	getQRImgURL = "https://mp.weixin.qq.com/cgi-bin/showqrcode"
 )
 
@@ -63,7 +63,7 @@ func (q *QR) GetQRTicket(tq *Request) (t *Ticket, err error) {
 		return
 	}
 
-	uri := fmt.Sprintf("%s?access_token=%s", qrCreateURL, accessToken)
+	uri := fmt.Sprintf(qrCreateURL, accessToken)
 	response, err := util.PostJSON(uri, tq)
 	if err != nil {
 		err = fmt.Errorf("get qr ticket failed, %s", err)
